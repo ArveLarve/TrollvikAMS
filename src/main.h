@@ -3,6 +3,9 @@
 #include <time.h>
 #include <PubSubClient.h>
 
+#include <DallasTemperature.h>
+#include <OneWire.h>
+
 // -------------  WiFi ------------------------------------------ //
 
 const char wifiSSID[] = "";
@@ -63,9 +66,15 @@ PubSubClient mqttClient(espClient);
 ulong lastTransmission = 0;
 uint32_t transmissionCounter = 0;
 
+#define ONE_WIRE_PIN 5
+OneWire oneWire(ONE_WIRE_PIN);
+DallasTemperature sensors(&oneWire);
 
 // ------------- Function declarations -------------------------- //
 
 void setClock();
 bool verifylts();
 void reconnectMqtt();
+float getTemperatures();
+
+// ------------- Structs ---------------------------------------- //

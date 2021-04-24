@@ -2,12 +2,22 @@
 
 void setup() {
 
-  // ---- Serial port
+  // ---- Serial port --------------------------------- //
   // Serial.setDebugOutput(true);
   Serial.begin(2400, SERIAL_8E1);
   Serial.println("Serial starts...");
 
-  // ---- WiFi
+
+  // ---- Temperature sensor initialization ----------- //
+  sensors.begin();
+
+  // locate devices on the bus
+  Serial.print("Found ");
+  Serial.print(sensors.getDeviceCount(), DEC);
+  Serial.println(" devices.");
+
+
+  // ---- WiFi ---------------------------------------- //
   Serial.print("Wifi connecting...");
   WiFi.mode(WIFI_AP_STA);
   WiFi.begin(wifiSSID, wifiPassword);
@@ -44,7 +54,7 @@ void loop() {
   }
   if (millis() - lastTransmission > 10000) {
     String json = "{\"TransmissionCounter\":";
-    json += String(transmissionCounter++) + "}";
+    json += String(getTemperatures()) + "}";
 
     mqttClient.publish(mqttTopic,  json.c_str());
     lastTransmission = millis();
@@ -112,4 +122,11 @@ void reconnectMqtt() {
       delay(5000);
     }
   }
+}
+
+float getTemperatures() {
+  DeviceAddress addr;
+  sensors.requestTemperatures();
+  sensors.getAddress(addr, 0);
+  return sensors.getTempC(addr);
 }
