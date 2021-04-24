@@ -53,7 +53,7 @@ void loop() {
     reconnectMqtt();
   }
   if (millis() - lastTransmission > 10000) {
-    String json = "{\"TransmissionCounter\":";
+    String json = "{\"Temperature\":";
     json += String(getTemperatures()) + "}";
 
     mqttClient.publish(mqttTopic,  json.c_str());
