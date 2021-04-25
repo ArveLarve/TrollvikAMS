@@ -2,10 +2,13 @@
 #include <ESP8266WiFi.h>
 #include <time.h>
 #include <PubSubClient.h>
+#include <RemoteDebug.h>
 
 #include <DallasTemperature.h>
 #include <OneWire.h>
 
+#include "HanReader.h"
+#include "Kaifa.h"
 // -------------  WiFi ------------------------------------------ //
 
 const char wifiSSID[] = "";
@@ -70,11 +73,21 @@ uint32_t transmissionCounter = 0;
 OneWire oneWire(ONE_WIRE_PIN);
 DallasTemperature sensors(&oneWire);
 
+HanReader hanReader;
+int lastPowerReading;
+
+// ------------- Remote Debug ----------------------------------- //
+
+RemoteDebug Debug;
+#define WEBSOCKET_DISABLED true
+
+
 // ------------- Function declarations -------------------------- //
 
 void setClock();
 bool verifylts();
 void reconnectMqtt();
 float getTemperatures();
+int readHan();
 
 // ------------- Structs ---------------------------------------- //
